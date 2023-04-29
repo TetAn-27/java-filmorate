@@ -33,11 +33,10 @@ public class UserController {
             if (value.equals(user)) {
                 users.remove(user.getId());
                 log.debug("Пользователь с именем {} обновлен", user.getName());
-                return createUser(user);
             } else {
                 log.debug("Пользователь с именем {} создан", user.getName());
-                return createUser(user);
             }
+            return createUser(user);
         }
         return createUser(user);
     }
