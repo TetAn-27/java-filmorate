@@ -31,7 +31,7 @@ public class UserController {
     @PutMapping()
     public User putUser(@Valid @RequestBody User user, HttpServletResponse response) {
         if (users.containsKey(user.getId())) {
-            validatorName (user);
+            validatorName(user);
             log.debug("Пользователь с именем {} обновлен", user.getName());
             users.put(user.getId(), user);
         } else {
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     public User createUser(@RequestBody User user) {
-        validatorName (user);
+        validatorName(user);
         if (user.getId() == 0) {
             user.setId(userId);
             userId++;
@@ -50,7 +50,7 @@ public class UserController {
         return user;
     }
 
-    public void validatorName (User user) {
+    public void validatorName(User user) {
         if (user.getName() == null || user.getName().isEmpty()) {
             user.setName(user.getLogin());
             log.debug("Значение name пустое. В качестве имени используется логин");
