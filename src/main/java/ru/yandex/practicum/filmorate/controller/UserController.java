@@ -53,7 +53,7 @@ public class UserController {
     public void validatorName(User user) {
         if (user.getName() == null || user.getName().isEmpty()) {
             user.setName(user.getLogin());
-            log.debug("Значение name пустое. В качестве имени будет использоваться логин");
+            log.debug("Значение name пустое. В качестве имени будет использоваться login");
         }
     }
 }
