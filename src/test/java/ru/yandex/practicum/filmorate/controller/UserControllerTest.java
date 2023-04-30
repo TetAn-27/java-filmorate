@@ -9,7 +9,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,7 +73,7 @@ class UserControllerTest {
     public void testBirthdayWhenNormal() {
         user.setEmail("YPracticumTop@yandex.ru");
         user.setLogin("TetAn");
-        user.setBirthday(LocalDateTime.MAX);
+        user.setBirthday(LocalDate.MAX);
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size(), "Валидация для параметра login некорректна");

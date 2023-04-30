@@ -3,22 +3,23 @@ package ru.yandex.practicum.filmorate.controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @Slf4j
 @RequestMapping("/users")
 public class UserController {
 
-    private final Map<Integer, User> users = new HashMap<>();
+    private final HashMap<Integer, User> users = new HashMap<>();
+    private int userId = 1;
 
     @GetMapping()
-    public Map<Integer, User> getAllUsers() {
-        return users;
+    public ArrayList<User> getAllUsers() {
+        return new ArrayList<>(users.values());
     }
 
     @PostMapping()
@@ -28,21 +29,23 @@ public class UserController {
     }
 
     @PutMapping()
-    public User putUser(@Valid @RequestBody User user) {
-        for (User value : users.values()) {
-            if (value.equals(user)) {
-                users.remove(user.getId());
-                log.debug("Пользователь с именем {} обновлен", user.getName());
-            } else {
-                log.debug("Пользователь с именем {} создан", user.getName());
-            }
-            return createUser(user);
+    public User putUser(@Valid @RequestBody User user, HttpServletResponse response) {
+        if (users.containsKey(user.getId())) {
+            validatorName (user);
+            log.debug("Пользователь с именем {} обновлен", user.getName());
+            users.put(user.getId(), user);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        return createUser(user);
+        return user;
     }
 
     public User createUser(@RequestBody User user) {
         validatorName (user);
+        if (user.getId() == 0) {
+            user.setId(userId);
+            userId++;
+        }
         users.put(user.getId(), user);
         return user;
     }

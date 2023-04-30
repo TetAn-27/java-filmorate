@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Data;
 
 import javax.validation.constraints.*;
@@ -17,5 +17,5 @@ public class User {
     private String login;
     private String name;
     @Past
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 }

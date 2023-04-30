@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.*;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -40,7 +39,7 @@ class FilmControllerTest {
     @Test
     public void testDurationWhenValuesNegative() {
         film.setName("Avatar");
-        film.setDuration(Duration.ZERO);
+        film.setDuration(-1);
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size(), "Валидация для параметра duration некорректна");
