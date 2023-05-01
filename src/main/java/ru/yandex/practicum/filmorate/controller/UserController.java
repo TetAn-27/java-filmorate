@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -18,7 +19,7 @@ public class UserController {
     private int userId = 1;
 
     @GetMapping()
-    public ArrayList<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return new ArrayList<>(users.values());
     }
 
@@ -35,7 +36,7 @@ public class UserController {
             log.debug("Пользователь с именем {} обновлен", user.getName());
             users.put(user.getId(), user);
         } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
         return user;
     }

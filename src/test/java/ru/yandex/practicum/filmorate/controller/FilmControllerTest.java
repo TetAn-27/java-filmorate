@@ -48,9 +48,7 @@ class FilmControllerTest {
     @Test
     public void testDescriptionWhenLengthIsMore200() {
         film.setName("Avatar");
-        film.setDescription("DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                "DescriptionDescription");
+        film.setDescription("Description".repeat(201));
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size(), "Валидация для параметра description некорректна");

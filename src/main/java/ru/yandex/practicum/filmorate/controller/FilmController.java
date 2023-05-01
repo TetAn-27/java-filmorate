@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,7 +20,7 @@ public class FilmController {
     private int filmId = 1;
 
     @GetMapping()
-    public ArrayList<Film> getAllFilms() {
+    public List<Film> getAllFilms() {
         return new ArrayList<>(films.values());
     }
 
@@ -37,7 +38,7 @@ public class FilmController {
             log.debug("Пользователь с именем {} обновлен", film.getName());
             films.put(film.getId(), film);
         } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
         return film;
     }
