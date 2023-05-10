@@ -1,53 +1,31 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@Slf4j
 @RequestMapping("/films")
 public class FilmController {
 
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int filmId = 1;
-
+   InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
     @GetMapping()
     public List<Film> getAllFilms() {
-        return new ArrayList<>(films.values());
+        return inMemoryFilmStorage.getAllFilms();
     }
 
     @PostMapping()
     public Film postFilm(@Valid @RequestBody Film film) {
-        log.debug("Фильм {} - добавлен", film.getName());
-        assignId(film);
-        films.put(film.getId(), film);
-        return film;
+        return inMemoryFilmStorage.postFilm(film);
     }
 
     @PutMapping()
     public Film putFilm(@Valid @RequestBody Film film, HttpServletResponse response) {
-        if (films.containsKey(film.getId())) {
-            log.debug("Пользователь с именем {} обновлен", film.getName());
-            films.put(film.getId(), film);
-        } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-        return film;
-    }
-
-    public void assignId(Film film) {
-        if (film.getId() == 0) {
-            film.setId(filmId);
-            filmId++;
-        }
+        return inMemoryFilmStorage.putFilm(film, response);
     }
 }
 
