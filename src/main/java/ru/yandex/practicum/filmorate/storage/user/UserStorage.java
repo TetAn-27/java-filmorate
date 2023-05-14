@@ -8,10 +8,12 @@ import java.util.List;
 
 public interface UserStorage {
    HashMap<Integer, User> users = new HashMap<>();
+
     List<User> getAllUsers();
 
     User postUser(User user);
 
     User putUser(User user, HttpServletResponse response);
+
     User getUserById(Integer id);
 }
