@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -31,6 +30,7 @@ public class UserController {
     public List<User> getMutualFriends(@PathVariable("id") Integer id, @PathVariable("otherId") Integer otherId) {
         return userService.getListOfMutualFriends(id, otherId);
     }
+
     @GetMapping("/{id}")
     public User getUserById(@PathVariable("id") Integer id) {
         return userService.getUserById(id);
