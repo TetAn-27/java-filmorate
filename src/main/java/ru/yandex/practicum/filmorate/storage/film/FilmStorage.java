@@ -1,20 +1,17 @@
 package ru.yandex.practicum.filmorate.storage.film;
-
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public interface FilmStorage {
 
-    public List<Film> getAllFilms();
-
-
-    public Film postFilm(@Valid @RequestBody Film film);
-
-
-    public Film putFilm(@Valid @RequestBody Film film, HttpServletResponse response);
+    Map<Integer, Film> films = new HashMap<>();
+    List<Film> getAllFilms();
+    Film postFilm(Film film);
+    Film putFilm(Film film, HttpServletResponse response);
+    Film getFilmById(Integer id);
 }
