@@ -1,16 +1,17 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 public interface UserStorage {
-    public List<User> getAllUsers();
+   HashMap<Integer, User> users = new HashMap<>();
+    List<User> getAllUsers();
 
-    public User postUser(@Valid @RequestBody User user);
+    User postUser(User user);
 
-    public User putUser(@Valid @RequestBody User user, HttpServletResponse response);
+    User putUser(User user, HttpServletResponse response);
+    User getUserById(Integer id);
 }

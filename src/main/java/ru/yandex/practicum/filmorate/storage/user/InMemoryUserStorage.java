@@ -5,11 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,13 +24,13 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @PostMapping()
-    public User postUser(@Valid @RequestBody User user) {
+    public User postUser(User user) {
         log.debug("Пользователь с именем {} создан", user.getName());
         return createUser(user);
     }
 
     @PutMapping()
-    public User putUser(@Valid @RequestBody User user, HttpServletResponse response) {
+    public User putUser(User user, HttpServletResponse response) {
         if (users.containsKey(user.getId())) {
             validatorName(user);
             log.debug("Пользователь с именем {} обновлен", user.getName());
@@ -43,7 +41,7 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
-    public User createUser(@RequestBody User user) {
+    public User createUser(User user) {
         validatorName(user);
         if (user.getId() == 0) {
             user.setId(userId);
@@ -58,5 +56,10 @@ public class InMemoryUserStorage implements UserStorage {
             user.setName(user.getLogin());
             log.debug("Значение name пустое. В качестве имени будет использоваться login");
         }
+    }
+
+    public User getUserById(Integer id) {
+        log.debug("Пользователь с id: {}", id);
+        return users.get(id);
     }
 }
