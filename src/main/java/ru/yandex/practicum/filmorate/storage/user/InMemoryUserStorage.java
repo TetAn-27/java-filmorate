@@ -60,7 +60,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User getUserById(Integer id) {
-        log.debug("Пользователь с id: {}", id);
-        return users.get(id);
+        if (users.containsKey(id)) {
+            log.debug("Пользователь с id: {}", id);
+            return users.get(id);
+        } else {
+            throw new NotFoundException("User с таким ID не был найден");
+        }
     }
 }

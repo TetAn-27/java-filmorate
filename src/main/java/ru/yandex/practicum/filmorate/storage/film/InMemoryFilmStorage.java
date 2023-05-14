@@ -39,8 +39,12 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     public Film getFilmById(Integer id) {
-        log.debug("Фильм с id: {}", id);
-        return films.get(id);
+        if (films.containsKey(id)) {
+            log.debug("Фильм с id: {}", id);
+            return films.get(id);
+        } else {
+            throw new NotFoundException("Film с таким ID не был найден");
+        }
     }
 
     public void assignId(Film film) {

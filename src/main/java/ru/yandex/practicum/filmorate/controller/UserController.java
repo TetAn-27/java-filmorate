@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public Set<User> getFriends(@PathVariable("id") Integer id) {
+    public List<User> getFriends(@PathVariable("id") Integer id) {
         return userService.getFriends(id);
     }
 

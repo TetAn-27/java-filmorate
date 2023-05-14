@@ -17,10 +17,14 @@ public class UserService {
 
     private UserStorage userStorage;
 
-    public Set<User> getFriends(Integer id) {
-        Set<User> friends = new HashSet<>();
+    public User getUserById(Integer id) {
+        return userStorage.getUserById(id);
+    }
+
+    public List<User> getFriends(Integer id) {
+        List<User> friends = new ArrayList<>();
         for (Integer friend : userStorage.getUserById(id).getFriends()) {
-            friends.add(getUserById(Math.toIntExact(friend)));
+            friends.add(getUserById((friend)));
         }
         return friends;
     }
@@ -29,34 +33,24 @@ public class UserService {
         User user = getUserById(id);
         User friend = getUserById(friendId);
 
-        Set<Integer> friendsUser = user.getFriends();
-        friendsUser.add(friendId);
-        user.setFriends(friendsUser);
-
-        Set<Integer> friendsUser1 = friend.getFriends();
-        friendsUser1.add(id);
-        friend.setFriends(friendsUser1);
+        user.getFriends().add(friendId);
+        friend.getFriends().add(id);
     }
 
     public void deleteFriend(Integer id, Integer friendId) {
         User user = getUserById(id);
         User friend = getUserById(friendId);
 
-        Set<Integer> friendsUser = user.getFriends();
-        friendsUser.remove(friendId);
-        user.setFriends(friendsUser);
-
-        Set<Integer> friendsUser1 = friend.getFriends();
-        friendsUser1.remove(id);
-        friend.setFriends(friendsUser1);
+        user.getFriends().remove(friendId);
+        friend.getFriends().remove(id);
     }
 
     public List<User> getListOfMutualFriends(Integer id, Integer friendId) {
         Set<Integer> sort = new HashSet<>(getUserById(id).getFriends());
         sort.retainAll(getUserById(friendId).getFriends());
         List<User> friendsList = new ArrayList<>();
-        for (Integer aLong : sort) {
-            friendsList.add(userStorage.users.get(aLong));
+        for (Integer i : sort) {
+            friendsList.add(getUserById(i));
         }
         return friendsList;
     }
@@ -71,9 +65,5 @@ public class UserService {
 
     public User putUser(User user, HttpServletResponse response) {
         return userStorage.putUser(user, response);
-    }
-
-    public User getUserById(Integer id) {
-        return userStorage.getUserById(id);
     }
 }
