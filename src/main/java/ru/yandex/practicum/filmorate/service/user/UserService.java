@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -23,7 +24,8 @@ public class UserService {
 
     public List<User> getFriends(Integer id) {
         List<User> friends = new ArrayList<>();
-        for (Integer friend : userStorage.getUserById(id).getFriends()) {
+        Set<Integer> friendsList = getUserById(id).getFriends();
+        for (Integer friend : friendsList) {
             friends.add(getUserById((friend)));
         }
         return friends;
@@ -41,13 +43,20 @@ public class UserService {
         User user = getUserById(id);
         User friend = getUserById(friendId);
 
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(id);
+        if (user.getFriends().contains(friendId)) {
+            user.getFriends().remove(friendId);
+            friend.getFriends().remove(id);
+        } else {
+            throw new NotFoundException("Пользователи с такими id не являются друзьями");
+        }
     }
 
     public List<User> getListOfMutualFriends(Integer id, Integer friendId) {
-        Set<Integer> sort = new HashSet<>(getUserById(id).getFriends());
-        sort.retainAll(getUserById(friendId).getFriends());
+        User user = getUserById(id);
+        User friend = getUserById(friendId);
+
+        Set<Integer> sort = new HashSet<>(user.getFriends());
+        sort.retainAll(friend.getFriends());
         List<User> friendsList = new ArrayList<>();
         for (Integer i : sort) {
             friendsList.add(getUserById(i));

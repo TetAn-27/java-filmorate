@@ -31,7 +31,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film putFilm(Film film, HttpServletResponse response) {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
-            log.debug("Пользователь с именем {} обновлен", film.getName());
+            log.debug("Фильм с именем {} обновлен", film.getName());
         } else {
             throw new NotFoundException("Film с таким ID не был найден");
         }

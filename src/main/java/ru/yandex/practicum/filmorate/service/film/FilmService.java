@@ -16,13 +16,15 @@ public class FilmService {
     private final FilmStorage filmStorage;
 
     public void addLike(Integer id, Integer userId) {
-        getFilmById(id).getLikeList().add((userId));
+        Film film = getFilmById(id);
+        film.getLikeList().add((userId));
     }
 
     public void deleteLike(Integer id, Integer userId) {
-        Set<Integer> likeList = getFilmById(id).getLikeList();
+        Film film = getFilmById(id);
+        Set<Integer> likeList = film.getLikeList();
         if (likeList.contains(userId)) {
-            getFilmById(id).getLikeList().remove((userId));
+            film.getLikeList().remove((userId));
         } else {
             throw new NotFoundException("Film с таким ID не был найден");
         }
