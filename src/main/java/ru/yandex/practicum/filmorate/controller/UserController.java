@@ -37,13 +37,13 @@ public class UserController {
     }
 
     @PostMapping()
-    public User postUser(@Valid @RequestBody User user) {
-        return userService.postUser(user);
+    public void postUser(@Valid @RequestBody User user) {
+        userService.postUser(user);
     }
 
     @PutMapping()
-    public User putUser(@Valid @RequestBody User user, HttpServletResponse response) {
-        return userService.putUser(user, response);
+    public void putUser(@Valid @RequestBody User user) {
+        userService.putUser(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")

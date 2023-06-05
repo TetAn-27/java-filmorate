@@ -20,5 +20,7 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private Integer duration;
+    private String rating;
+    private Set<String> genre = new HashSet<>();
     private Set<Integer> likeList = new HashSet<>();
 }

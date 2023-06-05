@@ -68,11 +68,11 @@ public class UserService {
         return userStorage.getAllUsers();
     }
 
-    public User postUser(User user) {
-        return userStorage.postUser(user);
+    public void postUser(User user) {
+       userStorage.postUser(user);
     }
 
-    public User putUser(User user, HttpServletResponse response) {
-        return userStorage.putUser(user, response);
+    public void putUser(User user) {
+        userStorage.putUser(user);
     }
 }

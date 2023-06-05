@@ -25,13 +25,13 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @PostMapping()
-    public User postUser(User user) {
+    public void postUser(User user) {
         log.debug("Пользователь с именем {} создан", user.getName());
-        return createUser(user);
+        createUser(user);
     }
 
     @PutMapping()
-    public User putUser(User user, HttpServletResponse response) {
+    public void putUser(User user) {
         if (users.containsKey(user.getId())) {
             validatorName(user);
             log.debug("Пользователь с именем {} обновлен", user.getName());
@@ -39,17 +39,15 @@ public class InMemoryUserStorage implements UserStorage {
         } else {
             throw new NotFoundException("User с таким ID не был найден");
         }
-        return user;
     }
 
-    public User createUser(User user) {
+    public void createUser(User user) {
         validatorName(user);
         if (user.getId() == 0) {
             user.setId(userId);
             userId++;
         }
         users.put(user.getId(), user);
-        return user;
     }
 
     public void validatorName(User user) {
