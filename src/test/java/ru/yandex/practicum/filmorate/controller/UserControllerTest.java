@@ -21,7 +21,7 @@ class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        user = new User(id, name, login, email, birthday);
+        user = new User();
     }
 
     @Test
