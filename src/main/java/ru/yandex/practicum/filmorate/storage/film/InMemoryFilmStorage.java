@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+/*package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,21 +21,19 @@ public class InMemoryFilmStorage implements FilmStorage {
         return new ArrayList<>(films.values());
     }
 
-    public Film postFilm(Film film) {
+    public void postFilm(Film film) {
         assignId(film);
         films.put(film.getId(), film);
         log.debug("Фильм {} - добавлен", film.getName());
-        return film;
     }
 
-    public Film putFilm(Film film, HttpServletResponse response) {
+    public void putFilm(Film film, HttpServletResponse response) {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
             log.debug("Фильм с именем {} обновлен", film.getName());
         } else {
             throw new NotFoundException("Film с таким ID не был найден");
         }
-        return film;
     }
 
     public Film getFilmById(Integer id) {
@@ -53,4 +51,4 @@ public class InMemoryFilmStorage implements FilmStorage {
             filmId++;
         }
     }
-}
+}*/
