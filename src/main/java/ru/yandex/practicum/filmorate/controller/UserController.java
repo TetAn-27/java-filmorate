@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.util.List;
 import java.util.Optional;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
