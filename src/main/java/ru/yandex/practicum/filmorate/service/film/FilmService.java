@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,15 +16,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class FilmService {
     private final FilmStorage filmStorage;
-    //private final UserStorage userStorage;
 
     public void addLike(Integer id, Integer userId) {
-        /*if (userStorage.getAllId().contains(userId)) {
-            log.debug("Пользователь с id {} поставил лайк фильму {}", userId, id);
-            filmStorage.addLike(id, userId);
-        } else {
-            throw new NotFoundException("User с таким ID не был найден");
-        }*/
         try {
             log.debug("Пользователь с id {} поставил лайк фильму {}", userId, id);
             filmStorage.addLike(id, userId);
@@ -40,23 +32,9 @@ public class FilmService {
         } else {
             throw new NotFoundException("Film с таким ID не был найден");
         }
-
-        /*try {
-            log.debug("Лайк о пользователя с id {} фильму {} был удален", userId, id);
-            filmStorage.deleteLike(id, userId);
-        } catch (DataAccessException ex) {
-            throw new NotFoundException("Film с таким ID не был найден");
-        }*/
     }
 
     public Film getFilmById(Integer id) {
-        /*if (filmStorage.getAllId().contains(id)) {
-            log.debug("Фильм с id: {}", id);
-            return filmStorage.getFilmById(id);
-        } else {
-            throw new NotFoundException("Film с таким ID не был найден");
-        }*/
-
         try {
             log.debug("Фильм с id: {}", id);
             return filmStorage.getFilmById(id);
@@ -82,13 +60,6 @@ public class FilmService {
     }
 
     public Optional<Film> putFilm(Film film) {
-        /*if (filmStorage.getAllId().contains(film.getId())) {
-            log.debug("Фильм с именем {} обновлен", film.getName());
-            return filmStorage.putFilm(film);
-        } else {
-            throw new NotFoundException("Film с таким ID не был найден");
-        }*/
-
         try {
             log.debug("Фильм с именем {} обновлен", film.getName());
             return filmStorage.putFilm(film);
