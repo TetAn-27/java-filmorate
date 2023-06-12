@@ -27,7 +27,7 @@ public class GenreDbStorage implements GenreStorage {
     public Optional<Genre> getGenreById(int id) {
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM genres WHERE genre_id = ?", id);
 
-        if(genreRows.next()) {
+        if (genreRows.next()) {
             Genre genre = new Genre(
                     genreRows.getInt("genre_id"),
                     genreRows.getString("name"));
