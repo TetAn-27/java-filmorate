@@ -5,7 +5,7 @@ import java.util.Optional;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 public interface MpaStorage {
-    Optional<Mpa> getMpaById (int id);
+    Optional<Mpa> getMpaById(int id);
 
     List<Mpa> getAllMpa();
 }
