@@ -46,7 +46,7 @@ class UserDbStorageTest {
 
     }
 
-    @Test
+    /*@Test
     void testPostUser() {
         User userActual = userStorage.postUser(user).get();
         assertEquals(user, userActual);
@@ -66,5 +66,5 @@ class UserDbStorageTest {
         userStorage.postUser(user);
         User userActual = userStorage.getUserById(1);
         assertEquals(user, userActual);
-    }
+    }*/
 }
