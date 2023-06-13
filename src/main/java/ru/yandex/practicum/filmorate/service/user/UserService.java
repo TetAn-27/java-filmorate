@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -15,13 +17,13 @@ import java.util.*;
 @AllArgsConstructor
 public class UserService {
 
-    private UserStorage userStorage;
+    @Qualifier("userDbStorage") @NonNull private UserStorage userStorage;
 
     public User getUserById(Integer id) {
         try {
-            log.debug("Пользователь с id: {}", id);
             return userStorage.getUserById(id);
         } catch (DataAccessException ex) {
+            log.error("User с ID {} не был найден", id);
             throw new NotFoundException("User с таким ID не был найден");
         }
     }
@@ -32,9 +34,9 @@ public class UserService {
 
     public void addFriend(Integer id, Integer friendId) {
         try {
-            log.debug("Пользователь с id {} добавил в друзья пользователя {}", id, friendId);
             userStorage.addFriend(id, friendId);
         } catch (DataAccessException ex) {
+            log.error("User с ID {} не был найден", id);
             throw new NotFoundException("User с таким ID не был найден");
         }
     }
@@ -43,6 +45,7 @@ public class UserService {
         try {
             userStorage.deleteFriend(id, friendId);
         } catch (DataAccessException ex) {
+            log.error("User с ID {} не был найден", id);
             throw new NotFoundException("Пользователи с такими id не являются друзьями");
         }
     }
@@ -59,16 +62,15 @@ public class UserService {
 
     public Optional<User> postUser(User user) {
         user = validatorName(user);
-        log.debug("Пользователь с именем {} создан", user.getName());
         return userStorage.postUser(user);
     }
 
     public Optional<User> putUser(User user) {
         try {
-            log.debug("Пользователь с именем {} обновлен", user.getName());
             user = validatorName(user);
             return userStorage.putUser(user);
         } catch (DataAccessException ex) {
+            log.error("User с ID {} не был найден для обновления", user.getId());
             throw new NotFoundException("User с таким ID не был найден");
         }
     }

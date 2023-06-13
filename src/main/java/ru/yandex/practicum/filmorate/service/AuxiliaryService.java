@@ -24,11 +24,12 @@ public class AuxiliaryService {
     }
 
     public Optional<Genre> getGenreById(Integer id) {
-        if (genreStorage.getGenreById(id).isEmpty()) {
+        Optional<Genre> genre = genreStorage.getGenreById(id);
+        if (genre.isEmpty()) {
             throw new NotFoundException("Жанр с таким ID не был найден");
         }
         log.debug("Жанр с id: {}", id);
-        return genreStorage.getGenreById(id);
+        return genre;
     }
 
     public List<Mpa> getAllMpa() {
@@ -36,10 +37,11 @@ public class AuxiliaryService {
     }
 
     public Optional<Mpa> getMpaById(Integer id) {
-        if (mpaStorage.getMpaById(id).isEmpty()) {
+        Optional<Mpa> mpa = mpaStorage.getMpaById(id);
+        if (mpa.isEmpty()) {
             throw new NotFoundException("Рейтинг с таким ID не был найден");
         }
             log.debug("Рейтинг с id: {}", id);
-            return mpaStorage.getMpaById(id);
+            return mpa;
     }
 }

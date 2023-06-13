@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Qualifier("filmDbStorage")
 public interface FilmStorage {
 
     Map<Integer, Film> films = new HashMap<>();
@@ -22,7 +21,7 @@ public interface FilmStorage {
 
     void addLike(Integer id, Integer userId);
 
-    List<Integer> getLikeList(Integer id);
+    List<Integer>  getUserIdsWhoLikedFilm(Integer id);
 
     void deleteLike(Integer id, Integer userId);
 }

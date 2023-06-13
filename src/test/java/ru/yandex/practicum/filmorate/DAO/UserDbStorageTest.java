@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.dao.UserDbStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserDbStorageTest {
 
     private final UserDbStorage userStorage;
@@ -46,7 +48,7 @@ class UserDbStorageTest {
 
     }
 
-    /*@Test
+    @Test
     void testPostUser() {
         User userActual = userStorage.postUser(user).get();
         assertEquals(user, userActual);
@@ -66,5 +68,5 @@ class UserDbStorageTest {
         userStorage.postUser(user);
         User userActual = userStorage.getUserById(1);
         assertEquals(user, userActual);
-    }*/
+    }
 }

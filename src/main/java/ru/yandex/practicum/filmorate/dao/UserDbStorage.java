@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.sql.ResultSet;
@@ -23,6 +24,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getAllUsers() {
         String sql = "select * from users";
+        log.info("Получен список пользователей");
         return jdbcTemplate.query(sql, this::mapRowToUser);
     }
 
@@ -31,27 +33,33 @@ public class UserDbStorage implements UserStorage {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("user_id");
-        int id = simpleJdbcInsert.executeAndReturnKey(user.toMap()).intValue();
+        user.setId(simpleJdbcInsert.executeAndReturnKey(user.toMap()).intValue());
         log.info("Добавлен новый пользователь: {}", user.getId());
-        return Optional.of(getUserById(id));
+        return Optional.of(user);
     }
 
     @Override
     public Optional<User> putUser(User user) {
-        String sqlQuery = "update users set name = ?, login = ?, email = ?, birthday = ? " +
-            "where user_id = ?";
-        jdbcTemplate.update(sqlQuery,
+        String sqlQuery = "UPDATE users SET name = ?, login = ?, email = ?, birthday = ? " +
+            "WHERE user_id = ?";
+        int checkNumber = jdbcTemplate.update(sqlQuery,
                 user.getName(),
                 user.getLogin(),
                 user.getEmail(),
                 user.getBirthday(),
                 user.getId());
-        return Optional.of(getUserById(user.getId()));
+        if (checkNumber == 0) {
+            log.error("User с ID {} не был найден для обновления", user.getId());
+            throw new NotFoundException("User с таким ID не был найден");
+        }
+        log.info("Данные пользователя: {} обновлены", user.getId());
+        return Optional.of(user);
     }
 
     @Override
     public User getUserById(Integer id) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
+        log.debug("User с id: {}", id);
         return jdbcTemplate.queryForObject(sql, this::mapRowToUser, id);
     }
 
@@ -83,11 +91,13 @@ public class UserDbStorage implements UserStorage {
         jdbcTemplate.update(sqlQuery,
                             id,
                             friendId);
+        log.debug("Пользователь с id {} добавил в друзья пользователя {}", id, friendId);
     }
 
     @Override
     public void deleteFriend(Integer id, Integer friendId) {
         String sqlQuery = "DELETE FROM friends where user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sqlQuery, id, friendId);
+        log.debug("Пользователь с id {} из друзей пользователя {}", id, friendId);
     }
 }
