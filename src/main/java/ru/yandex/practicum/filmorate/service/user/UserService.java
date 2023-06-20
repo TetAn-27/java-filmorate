@@ -1,78 +1,93 @@
 package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class UserService {
 
-    private UserStorage userStorage;
+    @Qualifier("userDbStorage") @NonNull private UserStorage userStorage;
 
     public User getUserById(Integer id) {
-        return userStorage.getUserById(id);
+        try {
+            return userStorage.getUserById(id);
+        } catch (DataAccessException ex) {
+            log.error("User с ID {} не был найден", id);
+            throw new NotFoundException("User с таким ID не был найден");
+        }
     }
 
     public List<User> getFriends(Integer id) {
-        List<User> friends = new ArrayList<>();
-        Set<Integer> friendsList = getUserById(id).getFriends();
-        for (Integer friend : friendsList) {
-            friends.add(getUserById((friend)));
-        }
-        return friends;
+        return converterFriends(userStorage.getFriendsList(id));
     }
 
     public void addFriend(Integer id, Integer friendId) {
-        User user = getUserById(id);
-        User friend = getUserById(friendId);
-
-        user.getFriends().add(friendId);
-        friend.getFriends().add(id);
+        try {
+            userStorage.addFriend(id, friendId);
+        } catch (DataAccessException ex) {
+            log.error("User с ID {} не был найден", id);
+            throw new NotFoundException("User с таким ID не был найден");
+        }
     }
 
     public void deleteFriend(Integer id, Integer friendId) {
-        User user = getUserById(id);
-        User friend = getUserById(friendId);
-
-        if (user.getFriends().contains(friendId)) {
-            user.getFriends().remove(friendId);
-            friend.getFriends().remove(id);
-        } else {
+        try {
+            userStorage.deleteFriend(id, friendId);
+        } catch (DataAccessException ex) {
+            log.error("User с ID {} не был найден", id);
             throw new NotFoundException("Пользователи с такими id не являются друзьями");
         }
     }
 
     public List<User> getListOfMutualFriends(Integer id, Integer friendId) {
-        User user = getUserById(id);
-        User friend = getUserById(friendId);
-
-        Set<Integer> sort = new HashSet<>(user.getFriends());
-        sort.retainAll(friend.getFriends());
-        List<User> friendsList = new ArrayList<>();
-        for (Integer i : sort) {
-            friendsList.add(getUserById(i));
-        }
-        return friendsList;
+        List<Integer> sort = new ArrayList<>(userStorage.getFriendsList(id));
+        sort.retainAll(userStorage.getFriendsList(friendId));
+        return converterFriends(sort);
     }
 
     public List<User> getAllUsers() {
         return userStorage.getAllUsers();
     }
 
-    public User postUser(User user) {
+    public Optional<User> postUser(User user) {
+        user = validatorName(user);
         return userStorage.postUser(user);
     }
 
-    public User putUser(User user, HttpServletResponse response) {
-        return userStorage.putUser(user, response);
+    public Optional<User> putUser(User user) {
+        try {
+            user = validatorName(user);
+            return userStorage.putUser(user);
+        } catch (DataAccessException ex) {
+            log.error("User с ID {} не был найден для обновления", user.getId());
+            throw new NotFoundException("User с таким ID не был найден");
+        }
+    }
+
+    private User validatorName(User user) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+            log.debug("Значение name пустое. В качестве имени будет использоваться login");
+        }
+        return user;
+    }
+
+    private List<User> converterFriends(List<Integer> idList) {
+        List<User> friendList = new ArrayList<>();
+        for (Integer id : idList) {
+            friendList.add(getUserById(id));
+        }
+        return friendList;
     }
 }

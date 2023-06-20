@@ -3,11 +3,12 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/films")
@@ -32,13 +33,13 @@ public class FilmController {
     }
 
     @PostMapping()
-    public Film postFilm(@Valid @RequestBody Film film) {
+    public Optional<Film> postFilm(@Valid @RequestBody Film film) {
         return filmService.postFilm(film);
     }
 
     @PutMapping()
-    public Film putFilm(@Valid @RequestBody Film film, HttpServletResponse response) {
-        return filmService.putFilm(film, response);
+    public Optional<Film> putFilm(@Valid @RequestBody Film film) {
+        return filmService.putFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")

@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import javax.validation.Valid;
 
 @RestController
@@ -37,13 +37,13 @@ public class UserController {
     }
 
     @PostMapping()
-    public User postUser(@Valid @RequestBody User user) {
+    public Optional<User> postUser(@Valid @RequestBody User user) {
         return userService.postUser(user);
     }
 
     @PutMapping()
-    public User putUser(@Valid @RequestBody User user, HttpServletResponse response) {
-        return userService.putUser(user, response);
+    public Optional<User> putUser(@Valid @RequestBody User user) {
+        return userService.putUser(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -25,31 +25,31 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @PostMapping()
-    public User postUser(User user) {
+    public Optional<User> postUser(User user) {
         log.debug("Пользователь с именем {} создан", user.getName());
-        return createUser(user);
+        createUser(user);
+        return Optional.of(user);
     }
 
     @PutMapping()
-    public User putUser(User user, HttpServletResponse response) {
+    public Optional<User> putUser(User user) {
         if (users.containsKey(user.getId())) {
             validatorName(user);
             log.debug("Пользователь с именем {} обновлен", user.getName());
             users.put(user.getId(), user);
+            return Optional.of(user);
         } else {
             throw new NotFoundException("User с таким ID не был найден");
         }
-        return user;
     }
 
-    public User createUser(User user) {
+    public void createUser(User user) {
         validatorName(user);
         if (user.getId() == 0) {
             user.setId(userId);
             userId++;
         }
         users.put(user.getId(), user);
-        return user;
     }
 
     public void validatorName(User user) {
@@ -66,5 +66,20 @@ public class InMemoryUserStorage implements UserStorage {
         } else {
             throw new NotFoundException("User с таким ID не был найден");
         }
+    }
+
+    @Override
+    public List<Integer> getFriendsList(Integer id) {
+        return users.get(id).getFriends();
+    }
+
+    @Override
+    public void addFriend(Integer id, Integer friendId) {
+        users.get(id).getFriends().add(friendId);
+    }
+
+    @Override
+    public void deleteFriend(Integer id, Integer friendId) {
+        users.get(id).getFriends().remove(friendId);
     }
 }
